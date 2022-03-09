@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import { useState,useEffect}  from 'react';
 import './App.css';
+import Details from './components/details';
+import { getDetails } from './service';
+
 
 function App() {
+
+  const [results,setResults] = useState([]);
+  const getDetailsHandler = async()=>{
+    const data = await getDetails();
+    if(data){
+      setResults(data.results);
+    }
+  } 
+  useEffect(()=>{ 
+    getDetailsHandler();
+  },[])
+  
+  console.log(results);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div style={{display: 'flex', flexDirection: 'column',alignItems: 'center',justifyContent: 'center'}}>
+          {results.map((result, i)=>{
+            return(
+              <>
+              <Details result={result} />
+              </>
+            )
+          })}
+        </div>
     </div>
   );
 }
